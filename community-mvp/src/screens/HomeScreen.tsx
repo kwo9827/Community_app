@@ -2,8 +2,12 @@ import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { auth } from "../services/firebase";
 import { signOut } from "firebase/auth";
+import { RootStackParamList } from "../navigation/type";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function HomeScreen({ navigation }) {
+type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+
+export default function HomeScreen({ navigation }: Props) {
   const handleLogout = async () => {
     await signOut(auth);
     navigation.replace("Login");
