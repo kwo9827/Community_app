@@ -19,6 +19,7 @@ export default function HomeScreen({ navigation }: Props) {
       <Text style={styles.subtitle}>
         지금은 홈 화면입니다. 앞으로 여기서 커뮤니티 기능이 구현될 거예요.
       </Text>
+      <Button title="글쓰기" onPress={() => navigation.navigate("Write")} />
 
       <Button title="로그아웃" onPress={handleLogout} />
     </View>
