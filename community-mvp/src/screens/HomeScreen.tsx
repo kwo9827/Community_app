@@ -112,7 +112,7 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={styles.icon}>➕</Text>
           </TouchableOpacity>
           {/* 마이페이지 이동 */}
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("MyPage")}>
             <Text style={styles.icon}>☰</Text>
           </TouchableOpacity>
         </View>

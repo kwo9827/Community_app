@@ -6,6 +6,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import WriteScreen from "./src/screens/WriteScreen";
 import DetailScreen from "./src/screens/DetailScreen";
+import MypageScreen from "./src/screens/MypageScreen";
 import { RootStackParamList } from "./src/navigation/type";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,6 +20,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Write" component={WriteScreen} />
         <Stack.Screen name="Detail" component={DetailScreen} />
+        <Stack.Screen name="MyPage" component={MypageScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
