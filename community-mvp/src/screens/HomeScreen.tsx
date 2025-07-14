@@ -51,54 +51,57 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   const renderItem = ({ item }: { item: Post }) => (
-    <View style={styles.card}>
-      {/* 작성자 정보 */}
-      <View style={styles.userRow}>
-        {item.authorAvatarUrl ? (
-          <Image source={{ uri: item.authorAvatarUrl }} style={styles.avatar} />
+    <TouchableOpacity onPress={() => navigation.navigate("Detail", { postId: item.id })}>
+      <View style={styles.card}>
+        {/* 작성자 정보 */}
+        <View style={styles.userRow}>
+          {item.authorAvatarUrl ? (
+            <Image source={{ uri: item.authorAvatarUrl }} style={styles.avatar} />
+          ) : (
+            <View style={styles.avatar} />
+          )}
+          <View>
+            <Text style={styles.username}>{item.authorName || "익명"}</Text>
+            <Text style={styles.timestamp}>
+              {item.createdAt
+                ? new Date(item.createdAt.seconds * 1000).toLocaleString("ko-KR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  month: "short",
+                  day: "numeric",
+                })
+                : ""}
+            </Text>
+          </View>
+        </View>
+
+        {/* 게시글 이미지 */}
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.imagePlaceholder} />
         ) : (
-          <View style={styles.avatar} />
+          <View style={styles.imagePlaceholder} />
         )}
-        <View>
-          <Text style={styles.username}>{item.authorName || "익명"}</Text>
-          <Text style={styles.timestamp}>
-            {item.createdAt
-              ? new Date(item.createdAt.seconds * 1000).toLocaleString("ko-KR", {
-                hour: "2-digit",
-                minute: "2-digit",
-                month: "short",
-                day: "numeric",
-              })
-              : ""}
-          </Text>
+
+        {/* 게시글 내용 */}
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.preview}>{item.content}</Text>
+
+        {/* 좋아요 / 댓글 / 공유 */}
+        <View style={styles.actionRow}>
+          <Text>🤍 {item.likeCount ?? 0}</Text>
+          <Text>💬 {item.commentCount ?? 0}</Text>
+          <Text>🔗</Text>
         </View>
       </View>
-
-      {/* 썸네일 이미지 */}
-      {item.imageUrl ? (
-        <Image source={{ uri: item.imageUrl }} style={styles.imagePlaceholder} />
-      ) : (
-        <View style={styles.imagePlaceholder} />
-      )}
-
-      {/* 게시글 내용 */}
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.preview}>{item.content}</Text>
-
-      {/* 좋아요 / 댓글 / 공유 */}
-      <View style={styles.actionRow}>
-        <Text>🤍 {item.likeCount ?? 0}</Text>
-        <Text>💬 {item.commentCount ?? 0}</Text>
-        <Text>🔗</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
+
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* 상단 헤더 */}
+      {/* 상단 네비바 */}
       <View style={styles.header}>
-        <Text style={styles.logo}>이웃새글</Text>
+        <Text style={styles.logo}>KLP</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <Text style={styles.icon}>🔍</Text>

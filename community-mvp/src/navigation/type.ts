@@ -3,4 +3,6 @@ export type RootStackParamList = {
   Register: undefined;
   Home: undefined;
   Write: undefined;
+  MyPage: undefined;
+  Detail: { postId: string };
 };

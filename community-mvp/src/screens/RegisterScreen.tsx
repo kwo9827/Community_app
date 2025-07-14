@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  View,
+  TextInput,
+  Button,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { RootStackParamList } from "../navigation/type";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -9,18 +17,30 @@ type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
 export default function RegisterScreen({ navigation }: Props) {
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleRegister = async () => {
+    if (!nickname) {
+      setErrorMsg("닉네임을 입력하세요.");
+      return;
+    }
     if (password !== confirmPassword) {
       setErrorMsg("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // 닉네임 저장
+      await updateProfile(userCredential.user, {
+        displayName: nickname,
+      });
+
+      Alert.alert("회원가입 완료", "로그인해주세요");
       navigation.replace("Login");
     } catch (error: any) {
       console.log("회원가입 에러:", error);
@@ -38,6 +58,12 @@ export default function RegisterScreen({ navigation }: Props) {
         onChangeText={setEmail}
         style={styles.input}
         autoCapitalize="none"
+      />
+      <TextInput
+        placeholder="닉네임"
+        value={nickname}
+        onChangeText={setNickname}
+        style={styles.input}
       />
       <TextInput
         placeholder="비밀번호"
