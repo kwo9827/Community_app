@@ -103,12 +103,15 @@ export default function HomeScreen({ navigation }: Props) {
       <View style={styles.header}>
         <Text style={styles.logo}>KLP</Text>
         <View style={styles.headerIcons}>
+          {/* 게시글 검색(제목) */}
           <TouchableOpacity>
             <Text style={styles.icon}>🔍</Text>
           </TouchableOpacity>
+          {/* 게시글 작성 */}
           <TouchableOpacity onPress={() => navigation.navigate("Write")}>
             <Text style={styles.icon}>➕</Text>
           </TouchableOpacity>
+          {/* 마이페이지 이동 */}
           <TouchableOpacity>
             <Text style={styles.icon}>☰</Text>
           </TouchableOpacity>

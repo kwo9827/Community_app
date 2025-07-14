@@ -5,17 +5,20 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  ScrollView,
   TextInput,
   Button,
   FlatList,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
 } from "react-native";
 import {
   doc,
   getDoc,
   setDoc,
   updateDoc,
+  deleteDoc,
   collection,
   addDoc,
   onSnapshot,
@@ -119,19 +122,31 @@ export default function DetailScreen({ route }: Props) {
   // 좋아요 카운트
   const handleLike = async () => {
     const user = auth.currentUser;
-    if (!user || liked) return;
+    if (!user) return;
 
     const likeRef = doc(db, "posts", postId, "likes", user.uid);
+    const postRef = doc(db, "posts", postId);
+
     const likeSnap = await getDoc(likeRef);
 
-    if (!likeSnap.exists()) {
-      await setDoc(likeRef, { liked: true });
-
-      await updateDoc(doc(db, "posts", postId), {
-        likeCount: increment(1),
+    if (likeSnap.exists()) {
+      // 좋아요 취소
+      await updateDoc(postRef, { likeCount: increment(-1) });
+      await deleteDoc(likeRef); // ❗ 진짜 삭제!
+      setLiked(false);
+      setPost(prev => prev && {
+        ...prev,
+        likeCount: (prev.likeCount ?? 0) - 1,
       });
-
+    } else {
+      // 좋아요 하기
+      await setDoc(likeRef, { liked: true });
+      await updateDoc(postRef, { likeCount: increment(1) });
       setLiked(true);
+      setPost(prev => prev && {
+        ...prev,
+        likeCount: (prev.likeCount ?? 0) + 1,
+      });
     }
   };
 
@@ -144,67 +159,80 @@ export default function DetailScreen({ route }: Props) {
   }
 
   return (
-    <FlatList
-      data={comments}
-      keyExtractor={item => item.id}
-      ListHeaderComponent={
-        <View>
-          {post.imageUrl && (
-            <Image source={{ uri: post.imageUrl }} style={styles.image} />
-          )}
-          <View style={styles.content}>
-            <Text style={styles.title}>{post.title}</Text>
-            <Text style={styles.meta}>
-              {post.authorName} ·{" "}
-              {post.createdAt
-                ? new Date(post.createdAt.seconds * 1000).toLocaleString("ko-KR")
-                : ""}
-            </Text>
-            <Text style={styles.body}>{post.content}</Text>
-
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={handleLike} disabled={liked}>
-                <Text style={{ fontSize: 18 }}>
-                  {liked ? "❤️" : "🤍"} {post.likeCount ?? 0}
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={100} // 필요 시 조정
+      >
+        <FlatList
+          data={comments}
+          keyExtractor={item => item.id}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            ...styles.container,
+            paddingBottom: 32,
+          }}
+          ListHeaderComponent={
+            <View>
+              {post.imageUrl && (
+                <Image source={{ uri: post.imageUrl }} style={styles.image} />
+              )}
+              <View style={styles.content}>
+                <Text style={styles.title}>{post.title}</Text>
+                <Text style={styles.meta}>
+                  {post.authorName} ·{" "}
+                  {post.createdAt
+                    ? new Date(post.createdAt.seconds * 1000).toLocaleString("ko-KR")
+                    : ""}
                 </Text>
-              </TouchableOpacity>
-              <Text style={{ fontSize: 18 }}>
-                💬 {post.commentCount ?? 0}
+                <Text style={styles.body}>{post.content}</Text>
+
+                <View style={styles.actions}>
+                  <TouchableOpacity onPress={handleLike}>
+                    <Text style={{ fontSize: 18 }}>
+                      {liked ? "❤️" : "🤍"} {post.likeCount ?? 0}
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 18 }}>
+                    💬 {post.commentCount ?? 0}
+                  </Text>
+                </View>
+              </View>
+
+              <Text style={styles.commentTitle}>댓글</Text>
+            </View>
+          }
+          renderItem={({ item }) => (
+            <View style={styles.comment}>
+              <Text style={styles.commentAuthor}>{item.authorName}</Text>
+              <Text style={styles.commentContent}>{item.content}</Text>
+              <Text style={styles.commentTime}>
+                {item.createdAt
+                  ? new Date(item.createdAt.seconds * 1000).toLocaleString("ko-KR")
+                  : ""}
               </Text>
             </View>
-          </View>
-
-          {/* 댓글 입력 영역 */}
-          <View style={styles.commentSection}>
-            <Text style={styles.commentTitle}>댓글</Text>
-            <TextInput
-              style={styles.commentInput}
-              placeholder="댓글을 입력하세요..."
-              value={commentInput}
-              onChangeText={setCommentInput}
-            />
-            <Button title="등록" onPress={handleAddComment} />
-          </View>
-        </View>
-      }
-      renderItem={({ item }) => (
-        <View style={styles.comment}>
-          <Text style={styles.commentAuthor}>{item.authorName}</Text>
-          <Text style={styles.commentContent}>{item.content}</Text>
-          <Text style={styles.commentTime}>
-            {item.createdAt
-              ? new Date(item.createdAt.seconds * 1000).toLocaleString("ko-KR")
-              : ""}
-          </Text>
-        </View>
-      )}
-      contentContainerStyle={styles.container}
-    />
-  )
+          )}
+          ListFooterComponent={
+            <View style={styles.commentSection}>
+              <TextInput
+                style={styles.commentInput}
+                placeholder="댓글을 입력하세요..."
+                value={commentInput}
+                onChangeText={setCommentInput}
+              />
+              <Button title="등록" onPress={handleAddComment} />
+            </View>
+          }
+        />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { minHeight: "100%", backgroundColor: "#fff" },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -245,6 +273,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 12,
+    marginLeft: 18,
   },
   commentInput: {
     borderWidth: 1,
@@ -255,6 +284,7 @@ const styles = StyleSheet.create({
   },
   comment: {
     marginBottom: 16,
+    marginLeft: 20,
   },
   commentAuthor: {
     fontWeight: "bold",
