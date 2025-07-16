@@ -1,11 +1,10 @@
 ## 📝 Community MVP
 
-> 서비스 MVP - Expo 기반의 메쮜 SNS 앱
+> 서비스 MVP - Expo 기반의 커뮤니티 서비스
 
 ### 📌 프로젝트 개요
 
-React Native + Firebase를 활용한 카드형 SNS 메쮜 앱 MVP 프로젝트입니다.
-아이디 기반 가상 회원접병, 게시물 공개, 좋아요, 댓글, 마이페이지 까지 **SNS 해당 기능을 구현**하였습니다.
+React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트입니다.
 
 ---
 
@@ -21,7 +20,6 @@ React Native + Firebase를 활용한 카드형 SNS 메쮜 앱 MVP 프로젝트�
 | ❤️ **좋아요**         | 실시간 반영, 중복 좋아요 방지                  |
 | 💬 **댓글**          | 삽입 / 복잡 가능, 실시간 반영                 |
 | 🔍 **이미지 확대**      | 게시물 이미지 클릭 시 Modal  Modal \uud655대 |
-| 🚀 **EAS 버이드**     | APK 버전 빌드 등 EAS CLI 축제             |
 
 ---
 
@@ -46,6 +44,18 @@ React Native + Firebase를 활용한 카드형 SNS 메쮜 앱 MVP 프로젝트�
 
 ---
 
+* 📸 스크린샷 이미지
+
+<p align="center"> 
+  <img src="https://github.com/user-attachments/assets/590888c5-bac4-4af5-bfcd-f5816262108a" width="45%"/>
+<img width="298" height="610" alt="image" src="https://github.com/user-attachments/assets/a99fd77f-768d-45a3-a56d-05879a4c4329" />
+</p> 
+
+
+
+* 📹 기능별 영상 GIF
+  
+
 ### 🛠️ 실행 방법
 
 ```bash
@@ -59,7 +69,7 @@ npm install
 npm start
 ```
 
-> Android/iOS 기기에서 QR 실행 혹은 `eas build -p android` 로 APK 빌드 가능
+> Android/iOS 기기에서 Expo Go 어플 다운로드 후 QR 실행 혹은 `eas build -p android` 로 APK 빌드 가능
 
 ---
 
@@ -77,12 +87,4 @@ const firebaseConfig = {
 
 ---
 
-필요하다면 아래 내용도 자유롭게 추가하세요:
-
-* 📸 스크린샷 이미지
-* 📹 기능별 영상 GIF
-* 🔗 APK 다운로드 링크 (EAS Build 완료 후)
-
----
-
-> 본 프로젝트는 개인 과제 및 면접 제출용 MVP로 개발되었으며, 핵심 기능 구현을 중점으로 구성되었습니다.
+> 본 프로젝트는 커뮤니티 게시판 MVP로 개발되었으며, 핵심 기능 구현을 중점으로 구성되었습니다.
