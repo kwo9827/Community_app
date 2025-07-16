@@ -69,12 +69,12 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 <br/>
 
 <p align="center"> 
-  <img src="./community-mvp/assets/images/마이페이지1.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/마이페이지.jpg" width="45%" /> 
   <img src="./community-mvp/assets/images/마이페이지2.jpg" width="45%" /> 
 </p>
 
 <p align="center">
-  <i>마이페이지 화면 (1) / 마이페이지 화면 (2)</i>
+  <i>마이페이지 화면 / 회원정보수정 & 내가 쓴 글 확인</i>
 </p>
 
 <br/>
