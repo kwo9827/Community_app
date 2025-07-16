@@ -47,7 +47,7 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 * 📸 스크린샷 이미지
 
 <p align="center"> 
-  <img src="./community-mvp/assets/images/로그인.jpg" width="45%" style="margin-right: 30px;"/> 
+  <img src="./community-mvp/assets/images/로그인.jpg" width="45%" style="margin-right: 3%;"/> 
   <img src="./community-mvp/assets/images/회원가입.jpg" width="45%" /> 
 </p>
 
