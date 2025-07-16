@@ -48,6 +48,7 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 
 <p align="center"> 
   <img src="./community-mvp/assets/images/로그인.jpg" width="45%" style="margin-right: 3%;"/> 
+    &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./community-mvp/assets/images/회원가입.jpg" width="45%" /> 
 </p>
 
@@ -59,6 +60,7 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 
 <p align="center"> 
   <img src="./community-mvp/assets/images/홈화면.jpg" width="45%" style="margin-right: 30px;"/> 
+    &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./community-mvp/assets/images/게시글상세.jpg" width="45%" /> 
 </p>
 
@@ -70,6 +72,7 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 
 <p align="center"> 
   <img src="./community-mvp/assets/images/마이페이지.jpg" width="45%" style="margin-right: 30px;"/> 
+    &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="./community-mvp/assets/images/마이페이지2.jpg" width="45%" /> 
 </p>
 
