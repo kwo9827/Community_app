@@ -88,11 +88,6 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 </p>
 
 
-
-
-* 📹 기능별 영상 GIF
-  
-
 ### 🛠️ 실행 방법
 
 ```bash
