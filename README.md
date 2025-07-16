@@ -47,10 +47,11 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 * 📸 스크린샷 이미지
 
 <p align="center"> 
-![KakaoTalk_20250716_151833462](https://github.com/user-attachments/assets/0790a5ff-246a-45f9-a089-806ffca13b3c)
-![KakaoTalk_20250716_151833462](https://github.com/user-attachments/assets/6482a75d-618d-4232-8aa0-a51a2241b5d7)
-
+  <img src="https://github.com/user-attachments/assets/590888c5-bac4-4af5-bfcd-f5816262108a" width="45%"/>
+<img width="298" height="610" alt="image" src="https://github.com/user-attachments/assets/a99fd77f-768d-45a3-a56d-05879a4c4329" />
 </p> 
+
+
 
 * 📹 기능별 영상 GIF
   
