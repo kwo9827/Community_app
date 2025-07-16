@@ -44,6 +44,17 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 
 ---
 
+* 📸 스크린샷 이미지
+
+<p align="center"> 
+![KakaoTalk_20250716_151833462](https://github.com/user-attachments/assets/0790a5ff-246a-45f9-a089-806ffca13b3c)
+![KakaoTalk_20250716_151833462](https://github.com/user-attachments/assets/6482a75d-618d-4232-8aa0-a51a2241b5d7)
+
+</p> 
+
+* 📹 기능별 영상 GIF
+  
+
 ### 🛠️ 실행 방법
 
 ```bash
@@ -72,13 +83,6 @@ const firebaseConfig = {
   ...
 };
 ```
-
----
-
-
-* 📸 스크린샷 이미지
-* 📹 기능별 영상 GIF
-* 🔗 APK 다운로드 링크 (EAS Build 완료 후)
 
 ---
 
