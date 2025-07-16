@@ -47,8 +47,8 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 * 📸 스크린샷 이미지
 
 <p align="center"> 
-  <img src="./assets/images/로그인.jpg" width="45%" /> 
-  <img src="./assets/images/회원가입.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/로그인.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/회원가입.jpg" width="45%" /> 
 </p>
 
 <p align="center">
@@ -58,8 +58,8 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 <br/>
 
 <p align="center"> 
-  <img src="./assets/images/홈화면.jpg" width="45%" /> 
-  <img src="./assets/images/게시글상세.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/홈화면.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/게시글상세.jpg" width="45%" /> 
 </p>
 
 <p align="center">
@@ -69,8 +69,8 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 <br/>
 
 <p align="center"> 
-  <img src="./assets/images/마이페이지1.jpg" width="45%" /> 
-  <img src="./assets/images/마이페이지2.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/마이페이지1.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/마이페이지2.jpg" width="45%" /> 
 </p>
 
 <p align="center">
@@ -80,12 +80,13 @@ React Native + Firebase를 활용한 카드형 커뮤니티 앱 MVP 프로젝트
 <br/>
 
 <p align="center"> 
-  <img src="./assets/images/글작성.jpg" width="45%" /> 
+  <img src="./community-mvp/assets/images/글작성.jpg" width="45%" /> 
 </p>
 
 <p align="center">
   <i>글 작성 화면</i>
 </p>
+
 
 
 
