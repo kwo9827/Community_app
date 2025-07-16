@@ -58,6 +58,7 @@ export default function WriteScreen({ navigation }: Props) {
         imageUrl,
         createdAt: serverTimestamp(),
         authorName: user.displayName || "익명",
+        authorId: user.uid,
         authorAvatarUrl:
           user.photoURL || "https://cdn-icons-png.flaticon.com/512/149/149071.png",
         likeCount: 0,
@@ -74,15 +75,25 @@ export default function WriteScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.pageTitle}>글 작성하기</Text>
+
       <Text style={styles.label}>제목</Text>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} />
+      <TextInput
+        style={styles.input}
+        value={title}
+        onChangeText={setTitle}
+        placeholder="제목을 입력하세요"
+        placeholderTextColor="#aaa"
+      />
 
       <Text style={styles.label}>내용</Text>
       <TextInput
-        style={[styles.input, { height: 120 }]}
+        style={[styles.input, styles.textArea]}
         value={content}
         onChangeText={setContent}
         multiline
+        placeholder="내용을 입력하세요"
+        placeholderTextColor="#aaa"
       />
 
       <Text style={styles.label}>이미지 첨부</Text>
@@ -90,38 +101,81 @@ export default function WriteScreen({ navigation }: Props) {
         <Image source={{ uri: imageUrl }} style={styles.image} />
       ) : (
         <TouchableOpacity onPress={handlePickImage} style={styles.imagePlaceholder}>
-          <Text style={{ color: "#888" }}>이미지 선택</Text>
+          <Text style={{ color: "#999" }}>이미지를 선택해주세요</Text>
         </TouchableOpacity>
       )}
 
-      <Button title="작성하기" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>작성하기</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  label: { fontSize: 16, fontWeight: "bold", marginTop: 20 },
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "#FFFFF0",
+  },
+  pageTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 12,
+    color: "#5A4628",
+    textAlign: "center",
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 20,
+    color: "#5A4628",
+  },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
+    borderColor: "#d4c3a3",
+    borderRadius: 10,
+    padding: 12,
     marginTop: 8,
+    backgroundColor: "#FFFDF4",
+    fontSize: 15,
+    color: "#333",
+  },
+  textArea: {
+    height: 120,
+    textAlignVertical: "top",
   },
   image: {
     width: "100%",
     height: 180,
     marginTop: 12,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   imagePlaceholder: {
     width: "100%",
     height: 180,
-    backgroundColor: "#eee",
+    backgroundColor: "#f0e9d2",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 12,
-    borderRadius: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#d4c3a3",
+  },
+  submitButton: {
+    marginTop: 30,
+    backgroundColor: "#B2975C",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

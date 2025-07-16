@@ -52,6 +52,9 @@ export default function HomeScreen({ navigation }: Props) {
 
   const renderItem = ({ item }: { item: Post }) => (
     <TouchableOpacity onPress={() => navigation.navigate("Detail", { postId: item.id })}>
+      {/* <View style={styles.outerContainer}>
+        <View style={styles.middleContainer}>
+          <View style={styles.innerContainer}> */}
       <View style={styles.card}>
         {/* 작성자 정보 */}
         <View style={styles.userRow}>
@@ -90,9 +93,12 @@ export default function HomeScreen({ navigation }: Props) {
         <View style={styles.actionRow}>
           <Text>🤍 {item.likeCount ?? 0}</Text>
           <Text>💬 {item.commentCount ?? 0}</Text>
-          <Text>🔗</Text>
+          {/* <Text>🔗</Text> */}
         </View>
       </View>
+      {/* </View>
+        </View>
+      </View> */}
     </TouchableOpacity>
   );
 
@@ -103,10 +109,10 @@ export default function HomeScreen({ navigation }: Props) {
       <View style={styles.header}>
         <Text style={styles.logo}>KLP</Text>
         <View style={styles.headerIcons}>
-          {/* 게시글 검색(제목) */}
-          <TouchableOpacity>
+          {/* 게시글 검색(제목) -> 추후 개발 예정 */}
+          {/* <TouchableOpacity>
             <Text style={styles.icon}>🔍</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* 게시글 작성 */}
           <TouchableOpacity onPress={() => navigation.navigate("Write")}>
             <Text style={styles.icon}>➕</Text>
@@ -130,7 +136,7 @@ export default function HomeScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1, backgroundColor: "#FFFFF0" },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -142,12 +148,30 @@ const styles = StyleSheet.create({
   logo: { fontSize: 20, fontWeight: "bold" },
   headerIcons: { flexDirection: "row", gap: 12 },
   icon: { fontSize: 20, marginLeft: 16 },
+  // outerContainer: {
+  //   backgroundColor: "#906C48",
+  //   padding: 6,
+  //   borderRadius: 16,
+  //   marginBottom: 16,
+  // },
 
+  // middleContainer: {
+  //   backgroundColor: "#B2975C",
+  //   padding: 6,
+  //   borderRadius: 14,
+  // },
+
+  // innerContainer: {
+  //   backgroundColor: "#FFFFF0",
+  //   padding: 16,
+  //   borderRadius: 12,
+  // },
   list: { paddingHorizontal: 16 },
   card: {
     marginVertical: 12,
     padding: 16,
-    backgroundColor: "#fafafa",
+    backgroundColor: "#FFFFF0",
+    borderColor: "#B2975C",
     borderRadius: 12,
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -164,14 +188,13 @@ const styles = StyleSheet.create({
   },
   username: { fontWeight: "bold" },
   timestamp: { fontSize: 12, color: "#999" },
-
   imagePlaceholder: {
     height: 180,
     backgroundColor: "#ccc",
     borderRadius: 8,
     marginVertical: 10,
   },
-  title: { fontSize: 16, fontWeight: "bold", marginBottom: 4 },
+  title: { fontSize: 16, fontWeight: "bold", marginBottom: 4, color: "#5A4628" },
   preview: { color: "#555", lineHeight: 20 },
   actionRow: {
     flexDirection: "row",

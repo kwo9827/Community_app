@@ -2,18 +2,33 @@ import React, { useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   Text,
   StyleSheet,
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { setDoc, doc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 import { RootStackParamList } from "../navigation/type";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
+
+function getKoreanErrorMessage(code: string): string {
+  switch (code) {
+    case "auth/invalid-email":
+      return "올바른 이메일 형식이 아닙니다.";
+    case "auth/email-already-in-use":
+      return "이미 사용 중인 이메일입니다.";
+    case "auth/weak-password":
+      return "비밀번호는 최소 6자 이상이어야 합니다.";
+    case "auth/missing-email":
+      return "이메일을 입력해주세요.";
+    default:
+      return "회원가입 중 오류가 발생했습니다. 다시 시도해주세요.";
+  }
+}
 
 export default function RegisterScreen({ navigation }: Props) {
   const [email, setEmail] = useState("");
@@ -32,19 +47,36 @@ export default function RegisterScreen({ navigation }: Props) {
       return;
     }
 
+    if (!password) {
+      setErrorMsg("비밀번호를 입력하세요.");
+      return;
+    }
+    if (!confirmPassword) {
+      setErrorMsg("비밀번호 확인을 입력하세요.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setErrorMsg("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, { displayName: nickname });
 
-      // 닉네임 저장
-      await updateProfile(userCredential.user, {
-        displayName: nickname,
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        nickname,
+        email: userCredential.user.email,
+        createdAt: new Date(),
       });
 
       Alert.alert("회원가입 완료", "로그인해주세요");
       navigation.replace("Login");
     } catch (error: any) {
       console.log("회원가입 에러:", error);
-      setErrorMsg(error.message);
+      const code = error.code || "";
+      const msg = getKoreanErrorMessage(code);
+      setErrorMsg(msg);
     }
   };
 
@@ -58,12 +90,14 @@ export default function RegisterScreen({ navigation }: Props) {
         onChangeText={setEmail}
         style={styles.input}
         autoCapitalize="none"
+        placeholderTextColor="#aaa"
       />
       <TextInput
         placeholder="닉네임"
         value={nickname}
         onChangeText={setNickname}
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
       <TextInput
         placeholder="비밀번호"
@@ -71,6 +105,7 @@ export default function RegisterScreen({ navigation }: Props) {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
       <TextInput
         placeholder="비밀번호 확인"
@@ -78,11 +113,14 @@ export default function RegisterScreen({ navigation }: Props) {
         onChangeText={setConfirmPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
 
       {errorMsg ? <Text style={styles.error}>{errorMsg}</Text> : null}
 
-      <Button title="가입하기" onPress={handleRegister} />
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>가입하기</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Text style={styles.link}>이미 계정이 있으신가요? 로그인</Text>
@@ -92,15 +130,54 @@ export default function RegisterScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#FFFFF0",
+    padding: 24,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#5A4628",
+    marginBottom: 32,
+    textAlign: "center",
+  },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+    borderColor: "#d4c3a3",
+    backgroundColor: "#FFFDF4",
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 16,
+    fontSize: 15,
+    color: "#333",
   },
-  error: { color: "red", marginBottom: 10, textAlign: "center" },
-  link: { color: "blue", marginTop: 20, textAlign: "center" },
+  button: {
+    backgroundColor: "#B2975C",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  error: {
+    color: "#ff4d4d",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  link: {
+    marginTop: 24,
+    textAlign: "center",
+    color: "#666",
+    fontSize: 14,
+  },
 });

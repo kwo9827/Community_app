@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { RootStackParamList } from "../navigation/type";
@@ -17,7 +24,7 @@ export default function LoginScreen({ navigation }: Props) {
       await signInWithEmailAndPassword(auth, email, password);
       navigation.replace("Home");
     } catch (error) {
-      setErrorMsg("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
+      setErrorMsg("이메일 또는 비밀번호를 확인해주세요.");
     }
   };
 
@@ -31,6 +38,7 @@ export default function LoginScreen({ navigation }: Props) {
         onChangeText={setEmail}
         style={styles.input}
         autoCapitalize="none"
+        placeholderTextColor="#aaa"
       />
       <TextInput
         placeholder="비밀번호"
@@ -38,29 +46,71 @@ export default function LoginScreen({ navigation }: Props) {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        placeholderTextColor="#aaa"
       />
 
       {errorMsg ? <Text style={styles.error}>{errorMsg}</Text> : null}
 
-      <Button title="로그인" onPress={handleLogin} />
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>로그인</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.link}>회원가입</Text>
+        <Text style={styles.registerLink}>계정이 없으신가요? 회원가입</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#FFFFF0",
+    padding: 24,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#5A4628",
+    marginBottom: 32,
+    textAlign: "center",
+  },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+    borderColor: "#d4c3a3",
+    backgroundColor: "#FFFDF4",
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 16,
+    fontSize: 15,
+    color: "#333",
   },
-  error: { color: "red", marginBottom: 10, textAlign: "center" },
-  link: { color: "blue", marginTop: 20, textAlign: "center" },
+  loginButton: {
+    backgroundColor: "#B2975C",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  loginButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  error: {
+    color: "#ff4d4d",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  registerLink: {
+    marginTop: 24,
+    textAlign: "center",
+    color: "#666",
+    fontSize: 14,
+  },
 });

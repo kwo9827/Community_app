@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Modal,
 } from "react-native";
 import {
   doc,
@@ -56,21 +57,19 @@ export default function DetailScreen({ route }: Props) {
   const [commentInput, setCommentInput] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [liked, setLiked] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // 게시글 불러오기
   useEffect(() => {
-    const fetchPost = async () => {
-      const docRef = doc(db, "posts", postId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setPost(docSnap.data() as Post);
+    const docRef = doc(db, "posts", postId);
+    const unsubscribe = onSnapshot(docRef, snapshot => {
+      if (snapshot.exists()) {
+        setPost(snapshot.data() as Post);
       }
       setLoading(false);
-    };
-    fetchPost();
+    });
+    return () => unsubscribe();
   }, [postId]);
 
-  // 댓글 불러오기
   useEffect(() => {
     const q = collection(db, "posts", postId, "comments");
     const unsubscribe = onSnapshot(q, snapshot => {
@@ -83,7 +82,6 @@ export default function DetailScreen({ route }: Props) {
     return () => unsubscribe();
   }, [postId]);
 
-  // 좋아요 중복 확인
   useEffect(() => {
     const checkLiked = async () => {
       const user = auth.currentUser;
@@ -95,11 +93,9 @@ export default function DetailScreen({ route }: Props) {
         setLiked(true);
       }
     };
-
     checkLiked();
   }, [postId]);
 
-  // 댓글 작성
   const handleAddComment = async () => {
     const user = auth.currentUser;
     if (!user || !commentInput.trim()) return;
@@ -112,14 +108,12 @@ export default function DetailScreen({ route }: Props) {
 
     setCommentInput("");
 
-    // 댓글 수 카운트
     const postRef = doc(db, "posts", postId);
     await updateDoc(postRef, {
       commentCount: increment(1),
     });
   };
 
-  // 좋아요 카운트
   const handleLike = async () => {
     const user = auth.currentUser;
     if (!user) return;
@@ -130,16 +124,14 @@ export default function DetailScreen({ route }: Props) {
     const likeSnap = await getDoc(likeRef);
 
     if (likeSnap.exists()) {
-      // 좋아요 취소
       await updateDoc(postRef, { likeCount: increment(-1) });
-      await deleteDoc(likeRef); // ❗ 진짜 삭제!
+      await deleteDoc(likeRef);
       setLiked(false);
       setPost(prev => prev && {
         ...prev,
         likeCount: (prev.likeCount ?? 0) - 1,
       });
     } else {
-      // 좋아요 하기
       await setDoc(likeRef, { liked: true });
       await updateDoc(postRef, { likeCount: increment(1) });
       setLiked(true);
@@ -163,43 +155,38 @@ export default function DetailScreen({ route }: Props) {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={100} // 필요 시 조정
+        keyboardVerticalOffset={100}
       >
         <FlatList
           data={comments}
           keyExtractor={item => item.id}
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            ...styles.container,
-            paddingBottom: 32,
-          }}
+          contentContainerStyle={{ ...styles.container, paddingBottom: 32 }}
           ListHeaderComponent={
             <View>
               {post.imageUrl && (
-                <Image source={{ uri: post.imageUrl }} style={styles.image} />
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <Image
+                    source={{ uri: post.imageUrl }}
+                    style={styles.image}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
               )}
               <View style={styles.content}>
                 <Text style={styles.title}>{post.title}</Text>
                 <Text style={styles.meta}>
-                  {post.authorName} ·{" "}
-                  {post.createdAt
-                    ? new Date(post.createdAt.seconds * 1000).toLocaleString("ko-KR")
-                    : ""}
+                  {post.authorName} · {post.createdAt ? new Date(post.createdAt.seconds * 1000).toLocaleString("ko-KR") : ""}
                 </Text>
                 <Text style={styles.body}>{post.content}</Text>
-
                 <View style={styles.actions}>
                   <TouchableOpacity onPress={handleLike}>
-                    <Text style={{ fontSize: 18 }}>
-                      {liked ? "❤️" : "🤍"} {post.likeCount ?? 0}
-                    </Text>
+                    <Text style={{ fontSize: 18 }}>{liked ? "❤️" : "🤍"} {post.likeCount ?? 0}</Text>
                   </TouchableOpacity>
-                  <Text style={{ fontSize: 18 }}>
-                    💬 {post.commentCount ?? 0}
-                  </Text>
+                  <Text style={{ fontSize: 18 }}>💬 {post.commentCount ?? 0}</Text>
                 </View>
               </View>
-
+              <View style={styles.divider} />
               <Text style={styles.commentTitle}>댓글</Text>
             </View>
           }
@@ -207,11 +194,7 @@ export default function DetailScreen({ route }: Props) {
             <View style={styles.comment}>
               <Text style={styles.commentAuthor}>{item.authorName}</Text>
               <Text style={styles.commentContent}>{item.content}</Text>
-              <Text style={styles.commentTime}>
-                {item.createdAt
-                  ? new Date(item.createdAt.seconds * 1000).toLocaleString("ko-KR")
-                  : ""}
-              </Text>
+              <Text style={styles.commentTime}>{item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleString("ko-KR") : ""}</Text>
             </View>
           )}
           ListFooterComponent={
@@ -226,13 +209,20 @@ export default function DetailScreen({ route }: Props) {
             </View>
           }
         />
+
+        {/* 확대 이미지 모달 */}
+        <Modal visible={modalVisible} transparent={true}>
+          <TouchableOpacity style={styles.modalBackground} onPress={() => setModalVisible(false)}>
+            <Image source={{ uri: post.imageUrl }} style={styles.fullImage} resizeMode="contain" />
+          </TouchableOpacity>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { minHeight: "100%", backgroundColor: "#fff" },
+  container: { minHeight: "100%", backgroundColor: "#FFFFF0" },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -241,6 +231,17 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 240,
+    marginTop: 20,
+  },
+  fullImage: {
+    width: "90%",
+    height: "80%",
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.9)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
     padding: 16,
@@ -296,5 +297,11 @@ const styles = StyleSheet.create({
   commentTime: {
     fontSize: 12,
     color: "#888",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#ccc",
+    marginHorizontal: 16,
+    marginVertical: 12,
   },
 });
